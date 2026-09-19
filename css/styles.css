@@ -109,6 +109,11 @@ body {
   display: none;
 }
 
+.admin-table-wrap table th,
+.admin-table-wrap table td {
+  vertical-align: top;
+}
+
 @media (max-width: 767px) {
   .story-grid {
     grid-template-columns: 1fr;
