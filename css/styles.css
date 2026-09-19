@@ -1,0 +1,120 @@
+:root {
+  --ivory: #fbfbf9;
+  --surface: #f3f2ee;
+  --alabaster: #eae8e1;
+  --charcoal: #1c1c1a;
+  --slate: #6e6d68;
+  --amber: #c59b63;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img {
+  max-width: 100%;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--charcoal);
+  overflow-x: hidden;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(28, 28, 26, 0.18) 0%,
+    rgba(28, 28, 26, 0.38) 55%,
+    rgba(28, 28, 26, 0.5) 100%
+  );
+}
+
+.site-header {
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
+}
+
+.site-header.is-solid {
+  background: rgba(251, 251, 249, 0.92);
+  box-shadow: 0 1px 0 rgba(28, 28, 26, 0.06);
+  backdrop-filter: blur(16px);
+}
+
+.site-header.is-solid .brand-mark,
+.site-header.is-solid .nav-link,
+.site-header.is-solid .menu-toggle {
+  color: var(--charcoal);
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 1.25rem;
+}
+
+.story-grid img:nth-child(2) {
+  margin-top: 3.5rem;
+}
+
+.quote-band {
+  background-image: linear-gradient(rgba(251, 251, 249, 0.72), rgba(251, 251, 249, 0.78)),
+    url("../assets/mood-silk.jpeg");
+  background-size: cover;
+  background-position: center;
+}
+
+.inquire-bg {
+  background-image: linear-gradient(rgba(251, 251, 249, 0.82), rgba(243, 242, 238, 0.88)),
+    url("../assets/inquire-flatlay.jpeg");
+  background-size: cover;
+  background-position: center;
+}
+
+.product-card img,
+.science-frame img,
+.story-grid img {
+  transition: transform 0.7s ease;
+}
+
+.product-card:hover img,
+.science-frame:hover img {
+  transform: scale(1.03);
+}
+
+.form-field:focus {
+  outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(197, 155, 99, 0.18);
+}
+
+.success-card {
+  display: none;
+}
+
+.success-card.is-visible {
+  display: block;
+}
+
+.inquiry-form.is-hidden {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .story-grid img:nth-child(2) {
+    margin-top: 0;
+  }
+}

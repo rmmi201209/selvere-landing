@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SELVÈRE — The Cellular Truth</title>
+    <meta
+      name="description"
+      content="피부 표면의 일시적인 완화가 아닌, 세포 본연의 메커니즘을 회복시키는 바이오-클리니컬 럭셔리 스킨케어, SELVÈRE."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ivory: "#FBFBF9",
+              surface: "#F3F2EE",
+              alabaster: "#EAE8E1",
+              charcoal: "#1C1C1A",
+              slateink: "#6E6D68",
+              amberglow: "#C59B63",
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', "Times New Roman", "serif"],
+              sans: ["Pretendard", "Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="font-sans bg-ivory text-charcoal antialiased">
+    <header class="site-header fixed inset-x-0 top-0 z-50 text-ivory">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
+        <a href="#top" class="brand-mark font-serif text-xl tracking-[0.16em] md:text-2xl md:tracking-[0.28em]">SELVÈRE</a>
+        <nav class="hidden items-center gap-8 text-[13px] tracking-[0.12em] uppercase md:flex">
+          <a class="nav-link transition hover:text-amberglow" href="#philosophy">Philosophy</a>
+          <a class="nav-link transition hover:text-amberglow" href="#products">Products</a>
+          <a class="nav-link transition hover:text-amberglow" href="#science">Science</a>
+          <a class="nav-link transition hover:text-amberglow" href="#inquire">Inquire</a>
+        </nav>
+        <button
+          class="menu-toggle md:hidden"
+          type="button"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+        >
+          <span class="block h-px w-6 bg-current"></span>
+          <span class="mt-1.5 block h-px w-6 bg-current"></span>
+        </button>
+      </div>
+      <div class="mobile-nav hidden border-t border-alabaster bg-ivory/95 md:hidden">
+        <nav class="flex flex-col gap-4 px-5 py-5 text-sm tracking-[0.14em] uppercase text-charcoal">
+          <a href="#philosophy">Philosophy</a>
+          <a href="#products">Products</a>
+          <a href="#science">Science</a>
+          <a href="#inquire">Inquire</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="relative min-h-screen overflow-hidden">
+        <img
+          class="hero-media"
+          src="assets/hero-serum-loop.gif"
+          alt="잔잔하게 퍼지는 세럼 물결"
+        />
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center text-ivory">
+          <p class="mb-5 text-[11px] tracking-[0.22em] uppercase text-alabaster/90 md:tracking-[0.36em]">Bio-Clinical Luxury</p>
+          <h1 class="font-serif text-5xl font-medium leading-tight md:text-7xl">The Cellular Truth</h1>
+          <p class="mt-6 max-w-xl text-sm leading-7 tracking-normal text-ivory/85 md:text-base">
+            빛과 세포가 만나는 곳, 가장 순수한 생명력의 시작
+          </p>
+          <a
+            href="#philosophy"
+            class="mt-10 inline-flex items-center gap-3 border border-ivory/50 px-6 py-3 text-[11px] tracking-[0.12em] uppercase transition hover:border-amberglow hover:text-amberglow md:px-7 md:tracking-[0.2em]"
+          >
+            Explore Formulation
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </section>
+
+      <section id="philosophy" class="scroll-mt-20 px-5 py-24 md:px-8 md:py-32">
+        <div class="mx-auto grid max-w-6xl items-start gap-14 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow md:tracking-[0.32em]">Brand Heritage</p>
+            <h2 class="mt-4 font-serif text-3xl leading-snug md:text-5xl">
+              피부 표면이 아닌,<br />세포의 생명력에 집중합니다.
+            </h2>
+            <p class="mt-8 text-sm leading-7 text-slateink">
+              우리는 눈에 보이는 표면에 머물지 않고, 보이지 않는 세포의 세계에 머뭅니다.
+              SELVÈRE는 피부과 재생 클리닉의 의학적 데이터와 하이엔드 웰니스 미학을 결합한
+              더마톨로지컬 스킨케어입니다.
+            </p>
+            <div class="mt-10 space-y-8">
+              <article>
+                <h3 class="font-serif text-xl text-charcoal">The Origin</h3>
+                <p class="mt-2 text-sm leading-7 text-slateink">
+                  대부분의 화장품은 피부 표피의 윤기만을 만듭니다. 노화와 장벽 붕괴는 진피층과
+                  세포 손상에서 시작됩니다. SELVÈRE는 세포 신호 전달 체계 연구에서 출발했습니다.
+                </p>
+              </article>
+              <article>
+                <h3 class="font-serif text-xl text-charcoal">The Formulation</h3>
+                <p class="mt-2 text-sm leading-7 text-slateink">
+                  인공적인 인스턴트 윤기를 배제하고, 독자 개발한 마이크로 바이오 엑소좀
+                  Cell-Exo 40™ 포뮬러를 적용해 세포막과 유사한 구조로 피부 깊숙이 침투합니다.
+                </p>
+              </article>
+              <article>
+                <h3 class="font-serif text-xl text-charcoal">The Ritual</h3>
+                <p class="mt-2 text-sm leading-7 text-slateink">
+                  단순한 스킨케어 단계를 넘어, 빛과 텍스처를 통해 하루의 지친 감각을 복원하는
+                  프리미엄 재생 리추얼을 선사합니다.
+                </p>
+              </article>
+            </div>
+          </div>
+          <div class="story-grid">
+            <img
+              class="h-[360px] w-full object-cover md:h-[440px]"
+              src="assets/story-lab.jpeg"
+              alt="바이오 연구소의 유리 페트리디쉬"
+            />
+            <img
+              class="h-[360px] w-full object-cover md:h-[440px]"
+              src="assets/story-interior.jpeg"
+              alt="미색 톤의 미니멀 공간과 나뭇가지 그림자"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="quote-band px-5 py-20 md:py-24">
+        <blockquote class="mx-auto max-w-3xl text-center">
+          <p class="font-serif text-2xl leading-relaxed text-charcoal md:text-3xl">
+            “피부 세포가 증명하는 진실.”
+          </p>
+          <cite class="mt-5 block text-[11px] not-italic tracking-[0.18em] uppercase text-slateink md:tracking-[0.28em]">
+            The Cellular Truth
+          </cite>
+        </blockquote>
+      </section>
+
+      <section id="products" class="scroll-mt-20 bg-surface px-5 py-24 md:px-8 md:py-32">
+        <div class="mx-auto max-w-6xl">
+          <div class="mx-auto max-w-2xl text-center">
+            <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow md:tracking-[0.32em]">Signature Line</p>
+            <h2 class="mt-4 font-serif text-3xl md:text-5xl">시그니처 포뮬레이션</h2>
+            <p class="mt-5 text-sm leading-7 text-slateink">
+              세포 재생을 위한 세럼, 장벽 재건 크림, 그리고 광학 디바이스까지.
+              세 가지 리추얼이 하나의 메커니즘으로 이어집니다.
+            </p>
+          </div>
+
+          <div class="mt-16 grid gap-8 md:grid-cols-3">
+            <article class="product-card bg-ivory px-6 pb-10 pt-8">
+              <div class="mb-8 overflow-hidden bg-ivory">
+                <img class="mx-auto h-64 w-auto object-contain" src="assets/product-serum.jpeg" alt="Cell-Exo Luminance Serum" />
+              </div>
+              <p class="text-[11px] tracking-[0.2em] uppercase text-amberglow">Skincare · 50ml</p>
+              <h3 class="mt-3 font-serif text-2xl leading-snug">Cell-Exo Luminance Serum</h3>
+              <p class="mt-4 text-sm leading-7 text-slateink">
+                피부 기저층부터 광채를 끌어올리는 고농축 항산화 리페어 세럼.
+              </p>
+              <p class="mt-5 text-xs leading-6 text-slateink">
+                Cell-Exo 40™ 12% · 식물성 올리고 펩타이드 · 저분자 히알루론산 콤플렉스
+              </p>
+            </article>
+
+            <article class="product-card bg-ivory px-6 pb-10 pt-8">
+              <div class="mb-8 overflow-hidden bg-ivory">
+                <img class="mx-auto h-64 w-auto object-contain" src="assets/product-cream.jpeg" alt="Core Restore Intensive Cream" />
+              </div>
+              <p class="text-[11px] tracking-[0.2em] uppercase text-amberglow">Skincare · 50ml</p>
+              <h3 class="mt-3 font-serif text-2xl leading-snug">Core Restore Intensive Cream</h3>
+              <p class="mt-4 text-sm leading-7 text-slateink">
+                손상된 세포 간 지질을 재건하는 고밀도 장벽 리커버리 크림.
+              </p>
+              <p class="mt-5 text-xs leading-6 text-slateink">
+                바이오 세라마이드 NP 5% · 마데카소사이드 엑소좀 · 판테놀
+              </p>
+            </article>
+
+            <article class="product-card bg-ivory px-6 pb-10 pt-8">
+              <div class="mb-8 overflow-hidden bg-ivory">
+                <img class="mx-auto h-64 w-auto object-contain" src="assets/product-mask.jpeg" alt="Photon-Cellular LED Mask" />
+              </div>
+              <p class="text-[11px] tracking-[0.2em] uppercase text-amberglow">Beauty Tech</p>
+              <h3 class="mt-3 font-serif text-2xl leading-snug">Photon-Cellular LED Mask</h3>
+              <p class="mt-4 text-sm leading-7 text-slateink">
+                세포 에너지 대사를 활성화하는 3중 파장 광학 재생 디바이스.
+              </p>
+              <p class="mt-5 text-xs leading-6 text-slateink">
+                근적외선 850nm · 레드 630nm · 무선 릴렉세이션 모드
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="science" class="scroll-mt-20 px-5 py-24 md:px-8 md:py-32">
+        <div class="mx-auto max-w-6xl">
+          <div class="max-w-xl">
+            <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow md:tracking-[0.32em]">Clinical Science</p>
+            <h2 class="mt-4 font-serif text-3xl md:text-5xl">세포가 증명하는 수치</h2>
+            <p class="mt-5 text-sm leading-7 text-slateink">
+              Cell-Exo 40™ 마이크로 바이오 엑소좀은 세포막과 유사한 구조로 피부 깊숙이 침투하며,
+              단독 세럼 사용 대비 성분 흡수를 높입니다.
+            </p>
+          </div>
+
+          <div class="mt-16 grid gap-10 border-y border-alabaster py-12 md:grid-cols-3 md:gap-8">
+            <div>
+              <p class="font-serif text-5xl text-charcoal md:text-6xl">
+                <span data-counter="94" data-prefix="+" data-suffix="%">+0%</span>
+              </p>
+              <p class="mt-3 text-[11px] tracking-[0.2em] uppercase text-slateink">Texture Refinement</p>
+              <p class="mt-2 text-sm text-slateink">7일 사용 후 피부 결 개선율</p>
+            </div>
+            <div>
+              <p class="font-serif text-5xl text-charcoal md:text-6xl">
+                <span data-counter="38" data-prefix="+" data-suffix="%">+0%</span>
+              </p>
+              <p class="mt-3 text-[11px] tracking-[0.2em] uppercase text-slateink">Core Elasticity</p>
+              <p class="mt-2 text-sm text-slateink">속탄력 밀도 증가</p>
+            </div>
+            <div>
+              <p class="font-serif text-5xl text-charcoal md:text-6xl">
+                <span data-counter="4.8" data-decimals="1" data-suffix="x">0x</span>
+              </p>
+              <p class="mt-3 text-[11px] tracking-[0.2em] uppercase text-slateink">Active Absorption</p>
+              <p class="mt-2 text-sm text-slateink">LED 마스크 병행 시 침투율</p>
+            </div>
+          </div>
+
+          <div class="mt-16 grid gap-6 md:grid-cols-2">
+            <figure class="science-frame overflow-hidden">
+              <img class="h-[420px] w-full object-cover" src="assets/science-texture.jpeg" alt="맑고 점도 있는 세럼 텍스처" />
+            </figure>
+            <figure class="science-frame overflow-hidden">
+              <img class="h-[420px] w-full object-cover" src="assets/science-model.jpeg" alt="맑고 정돈된 피부 결의 모델" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-surface px-5 py-16 md:px-8">
+        <div class="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[0.8fr_1.2fr]">
+          <img class="h-72 w-full object-cover" src="assets/mood-profile.jpeg" alt="눈을 감고 리추얼에 집중하는 프로필" />
+          <div>
+            <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow md:tracking-[0.32em]">The Ritual</p>
+            <h2 class="mt-4 font-serif text-3xl md:text-4xl">빛과 텍스처로 감각을 복원합니다.</h2>
+            <p class="mt-5 max-w-xl text-sm leading-7 text-slateink">
+              세럼의 밀착감, 크림의 멜팅 밤 제형, LED의 잔잔한 파장. SELVÈRE의 리추얼은
+              눈에 보이는 광채보다 세포가 기억하는 회복에 머뭅니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="inquire" class="inquire-bg scroll-mt-20 px-5 py-24 md:px-8 md:py-32">
+        <div class="mx-auto max-w-xl bg-ivory/92 p-8 shadow-sm backdrop-blur-sm md:p-12">
+          <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow md:tracking-[0.32em]">B2B Partnership</p>
+          <h2 class="mt-4 font-serif text-3xl md:text-4xl">입점 및 제휴 문의</h2>
+          <p class="mt-4 text-sm leading-7 text-slateink">
+            백화점, 편집숍, 클리닉 파트너십 문의는 아래 양식으로 남겨 주세요.
+          </p>
+
+          <form id="inquiry-form" class="inquiry-form mt-10 space-y-5" novalidate>
+            <div data-field>
+              <label class="mb-2 block text-xs tracking-wide text-slateink" for="clientName">이름</label>
+              <input
+                class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
+                id="clientName"
+                name="clientName"
+                type="text"
+                autocomplete="name"
+              />
+              <p class="field-error mt-1 text-xs text-red-500"></p>
+            </div>
+            <div data-field>
+              <label class="mb-2 block text-xs tracking-wide text-slateink" for="company">회사명</label>
+              <input
+                class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
+                id="company"
+                name="company"
+                type="text"
+                autocomplete="organization"
+              />
+              <p class="field-error mt-1 text-xs text-red-500"></p>
+            </div>
+            <div class="grid gap-5 md:grid-cols-2">
+              <div data-field>
+                <label class="mb-2 block text-xs tracking-wide text-slateink" for="phone">연락처</label>
+                <input
+                  class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  autocomplete="tel"
+                  placeholder="010-0000-0000"
+                />
+                <p class="field-error mt-1 text-xs text-red-500"></p>
+              </div>
+              <div data-field>
+                <label class="mb-2 block text-xs tracking-wide text-slateink" for="email">이메일</label>
+                <input
+                  class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                />
+                <p class="field-error mt-1 text-xs text-red-500"></p>
+              </div>
+            </div>
+            <div data-field>
+              <label class="mb-2 block text-xs tracking-wide text-slateink" for="inquiryType">문의 유형</label>
+              <select
+                class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
+                id="inquiryType"
+                name="inquiryType"
+              >
+                <option value="">선택해 주세요</option>
+                <option value="국내/해외 입점 제휴">국내/해외 입점 제휴</option>
+                <option value="클리닉 파트너십">클리닉 파트너십</option>
+                <option value="기타 협업">기타 협업</option>
+              </select>
+              <p class="field-error mt-1 text-xs text-red-500"></p>
+            </div>
+            <div data-field>
+              <label class="mb-2 block text-xs tracking-wide text-slateink" for="message">문의 내용</label>
+              <textarea
+                class="form-field min-h-[140px] w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
+                id="message"
+                name="message"
+              ></textarea>
+              <p class="field-error mt-1 text-xs text-red-500"></p>
+            </div>
+            <label class="flex items-start gap-3 text-xs leading-6 text-slateink">
+              <input class="mt-1" id="privacyConsent" name="privacyConsent" type="checkbox" />
+              <span>개인정보 수집 및 이용에 동의합니다. 문의 응대 목적으로만 사용됩니다.</span>
+            </label>
+            <p class="text-xs text-red-500" data-consent-error></p>
+            <p class="text-xs text-red-500" data-submit-error></p>
+            <button
+              class="w-full bg-charcoal px-6 py-3 text-[11px] tracking-[0.22em] uppercase text-ivory transition hover:bg-amberglow disabled:opacity-60"
+              type="submit"
+            >
+              Send Inquiry
+            </button>
+          </form>
+
+          <div
+            id="inquiry-success"
+            class="success-card mt-10 border border-alabaster px-6 py-10 text-center"
+            tabindex="-1"
+          >
+            <p class="font-serif text-2xl">접수가 완료되었습니다.</p>
+            <p class="mt-3 text-sm leading-7 text-slateink">담당자가 확인 후 연락드리겠습니다.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-alabaster bg-ivory px-5 py-12 md:px-8">
+      <div class="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="font-serif text-xl tracking-[0.28em]">SELVÈRE</p>
+          <p class="mt-3 text-xs leading-6 text-slateink">
+            SELVÈRE Co., Ltd. · Bio-Clinical Luxury Skincare<br />
+            세포 본연의 메커니즘을 회복시키는 진실된 스킨케어
+          </p>
+        </div>
+        <p class="text-xs leading-6 text-slateink">
+          Privacy Policy · 문의 정보는 제휴 검토 외 목적에 사용하지 않습니다.<br />
+          © 2026 SELVÈRE. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
