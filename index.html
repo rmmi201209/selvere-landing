@@ -44,13 +44,16 @@
   <body class="font-sans bg-ivory text-charcoal antialiased">
     <header class="site-header fixed inset-x-0 top-0 z-50 text-ivory">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
-        <a href="#top" class="brand-mark font-serif text-xl tracking-[0.16em] md:text-2xl md:tracking-[0.28em]">SELVÈRE</a>
-        <nav class="hidden items-center gap-8 text-[13px] tracking-[0.12em] uppercase md:flex">
+        <a href="index.html#top" class="brand-mark font-serif text-xl tracking-[0.16em] md:text-2xl md:tracking-[0.28em]">SELVÈRE</a>
+        <nav class="hidden items-center gap-5 text-[12px] tracking-[0.12em] uppercase lg:gap-8 lg:text-[13px] md:flex">
           <a class="nav-link transition hover:text-amberglow" href="#philosophy">Philosophy</a>
           <a class="nav-link transition hover:text-amberglow" href="#products">Products</a>
           <a class="nav-link transition hover:text-amberglow" href="#science">Science</a>
           <a class="nav-link transition hover:text-amberglow" href="#inquire">Inquire</a>
+          <a class="nav-link transition hover:text-amberglow" href="board.html" data-requires-auth data-board-nav>Board</a>
+          <span data-admin-nav="nav-link transition hover:text-amberglow"></span>
         </nav>
+        <div class="hidden items-center gap-3 md:flex" data-auth-slot></div>
         <button
           class="menu-toggle md:hidden"
           type="button"
@@ -67,6 +70,9 @@
           <a href="#products">Products</a>
           <a href="#science">Science</a>
           <a href="#inquire">Inquire</a>
+          <a href="board.html" data-requires-auth data-board-nav>Board</a>
+          <span data-admin-nav></span>
+          <div data-auth-slot></div>
         </nav>
       </div>
     </header>
@@ -397,6 +403,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

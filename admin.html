@@ -40,8 +40,11 @@
   <body class="min-h-screen bg-ivory font-sans text-charcoal antialiased">
     <header class="border-b border-alabaster bg-ivory">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <p class="font-serif text-xl tracking-[0.18em]">SELVÈRE</p>
-        <p class="text-[11px] tracking-[0.18em] uppercase text-slateink">Admin / Inbound</p>
+        <a href="index.html" class="font-serif text-xl tracking-[0.18em]">SELVÈRE</a>
+        <nav class="flex items-center gap-5 text-[11px] tracking-[0.18em] uppercase">
+          <a class="text-amberglow" href="admin.html">Inbound</a>
+          <a class="text-slateink hover:text-amberglow" href="board.html" data-board-nav>Board</a>
+        </nav>
       </div>
     </header>
 
@@ -50,7 +53,7 @@
         <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow">Restricted</p>
         <h1 class="mt-3 font-serif text-3xl">관리자 로그인</h1>
         <p class="mt-3 text-sm leading-6 text-slateink">
-          Supabase Authentication에 등록한 관리자 이메일과 비밀번호로 로그인하세요.
+          인바운드 권한이 있는 계정만 들어올 수 있습니다. 전체 관리자 skc98, 문의 담당 skc99.
         </p>
         <form id="login-form" class="mt-8 space-y-4">
           <label class="block text-xs text-slateink" for="admin-email">이메일</label>
@@ -82,7 +85,7 @@
           <div>
             <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow">Inbound</p>
             <h1 class="mt-2 font-serif text-3xl">문의 관리</h1>
-            <p class="mt-2 text-sm text-slateink">상태와 비고를 저장하면 Supabase inquiries 테이블에 바로 반영됩니다.</p>
+            <p class="mt-2 text-sm text-slateink">각 문의의 AI 버튼을 누르면 비고 초안이 채워집니다. 확인·수정 후 Save로 저장하세요.</p>
           </div>
           <div class="flex gap-3">
             <button
@@ -126,6 +129,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="js/supabase-config.js"></script>
+    <script src="js/ai-assist.js"></script>
     <script src="js/admin.js"></script>
   </body>
 </html>

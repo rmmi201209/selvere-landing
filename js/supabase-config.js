@@ -5,6 +5,12 @@
   window.SELVERE_SUPABASE = {
     url: url,
     publishableKey: publishableKey,
+    adminEmail: "skc98@daum.net",
+    adminRoles: {
+      "skc98@daum.net": ["inbound", "board"],
+      "skc99@daum.net": ["inbound"],
+      "skc00@daum.net": ["board"]
+    },
     statuses: ["접수대기", "상담중", "연락완료", "보류", "완료"],
     createClient: function () {
       if (!window.supabase || typeof window.supabase.createClient !== "function") {

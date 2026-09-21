@@ -4,3 +4,4 @@ Desktop.ini
 *.tmp
 .vercel
 .env*
+!.env.example

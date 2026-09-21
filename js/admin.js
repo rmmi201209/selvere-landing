@@ -17,11 +17,56 @@
   function showLogin() {
     loginPanel.classList.remove("hidden");
     boardPanel.classList.add("hidden");
+    document.querySelectorAll("[data-board-nav]").forEach(function (el) {
+      el.hidden = false;
+    });
   }
 
   function showBoard() {
     loginPanel.classList.add("hidden");
     boardPanel.classList.remove("hidden");
+  }
+
+  function hasInboundAccess(session) {
+    var email = session && session.user && session.user.email
+      ? String(session.user.email).toLowerCase()
+      : "";
+    var scopes = (window.SELVERE_SUPABASE.adminRoles || {})[email] || [];
+    return scopes.indexOf("inbound") !== -1;
+  }
+
+  function hasBoardAccess(session) {
+    var email = session && session.user && session.user.email
+      ? String(session.user.email).toLowerCase()
+      : "";
+    var scopes = (window.SELVERE_SUPABASE.adminRoles || {})[email] || [];
+    return scopes.indexOf("board") !== -1;
+  }
+
+  function syncHeader(session) {
+    var inboundOnly = hasInboundAccess(session) && !hasBoardAccess(session);
+    document.querySelectorAll("[data-board-nav]").forEach(function (el) {
+      el.hidden = inboundOnly;
+    });
+  }
+
+  document.addEventListener(
+    "click",
+    function (event) {
+      var link = event.target.closest("[data-board-nav]");
+      if (!link || !link.hidden) return;
+      event.preventDefault();
+    },
+    true
+  );
+
+  function rejectUnlessInbound(session) {
+    if (hasInboundAccess(session)) {
+      return session;
+    }
+    return db.auth.signOut().then(function () {
+      throw new Error("이 계정은 인바운드 문의 권한이 없습니다. 게시판 담당 계정이면 사이트 Login으로 들어가 주세요.");
+    });
   }
 
   function formatTimestamp(value) {
@@ -54,6 +99,7 @@
       var tr = document.createElement("tr");
       tr.className = "border-t border-alabaster align-top";
       tr.dataset.id = String(item.id);
+      tr._inquiry = item;
 
       var statusOptions = STATUSES.map(function (status) {
         var selected = status === item.status ? " selected" : "";
@@ -85,7 +131,12 @@
         "<td class=\"px-3 py-3\"><textarea class=\"form-field min-h-[84px] w-52 border border-alabaster bg-ivory px-2 py-2 text-xs\" data-note>" +
         escapeHtml(item.note) +
         "</textarea></td>" +
-        "<td class=\"px-3 py-3\"><button class=\"bg-charcoal px-3 py-2 text-[10px] tracking-[0.14em] uppercase text-ivory\" type=\"button\" data-save>Save</button><p class=\"mt-2 text-[11px] text-slateink\" data-save-status></p></td>";
+        "<td class=\"px-3 py-3\">" +
+        "<div class=\"flex flex-col gap-2\">" +
+        "<button class=\"border border-amberglow px-3 py-2 text-[10px] tracking-[0.14em] uppercase text-amberglow\" type=\"button\" data-ai>AI</button>" +
+        "<button class=\"bg-charcoal px-3 py-2 text-[10px] tracking-[0.14em] uppercase text-ivory\" type=\"button\" data-save>Save</button>" +
+        "</div>" +
+        "<p class=\"mt-2 text-[11px] text-slateink\" data-save-status></p></td>";
 
       rowsEl.appendChild(tr);
     });
@@ -135,6 +186,10 @@
         if (result.error) {
           throw result.error;
         }
+        return rejectUnlessInbound(result.data.session);
+      })
+      .then(function (session) {
+        syncHeader(session);
         showBoard();
         return loadList();
       })
@@ -158,24 +213,64 @@
   });
 
   rowsEl.addEventListener("click", function (event) {
-    var button = event.target.closest("[data-save]");
-    if (!button) return;
+    var aiButton = event.target.closest("[data-ai]");
+    var saveButton = event.target.closest("[data-save]");
+    if (!aiButton && !saveButton) return;
 
-    var tr = button.closest("tr");
+    var tr = event.target.closest("tr");
+    if (!tr) return;
     var statusHint = tr.querySelector("[data-save-status]");
-    var id = tr.dataset.id;
+    var noteEl = tr.querySelector("[data-note]");
+    var statusEl = tr.querySelector("[data-status]");
+    var item = tr._inquiry || {};
 
-    button.disabled = true;
+    if (aiButton) {
+      aiButton.disabled = true;
+      statusHint.textContent = "AI 작성 중...";
+      db.auth
+        .getSession()
+        .then(function (result) {
+          var session = result.data && result.data.session;
+          return window.selvereAi.draft(session, "inquiry-note", {
+            name: item.name,
+            company: item.company,
+            phone: item.phone,
+            email: item.email,
+            category: item.category,
+            message: item.message,
+            status: statusEl.value,
+            note: noteEl.value
+          });
+        })
+        .then(function (text) {
+          noteEl.value = text;
+          statusHint.textContent = "초안이 채워졌습니다. 확인 후 Save를 눌러 주세요.";
+        })
+        .catch(function (error) {
+          statusHint.textContent = error.message || "초안을 만들지 못했습니다.";
+        })
+        .finally(function () {
+          aiButton.disabled = false;
+        });
+      return;
+    }
+
+    var id = tr.dataset.id;
+    saveButton.disabled = true;
     statusHint.textContent = "저장 중...";
     db.from("inquiries")
       .update({
-        status: tr.querySelector("[data-status]").value,
-        note: tr.querySelector("[data-note]").value.trim()
+        status: statusEl.value,
+        note: noteEl.value.trim()
       })
       .eq("id", id)
       .then(function (result) {
         if (result.error) {
           throw result.error;
+        }
+        if (tr._inquiry) {
+          tr._inquiry.status = statusEl.value;
+          tr._inquiry.note = noteEl.value.trim();
         }
         statusHint.textContent = "저장됨";
       })
@@ -183,15 +278,22 @@
         statusHint.textContent = error.message || "저장에 실패했습니다.";
       })
       .finally(function () {
-        button.disabled = false;
+        saveButton.disabled = false;
       });
   });
 
   db.auth.getSession().then(function (result) {
-    if (result.data && result.data.session) {
-      showBoard();
-      return loadList();
+    var session = result.data && result.data.session;
+    if (!session) {
+      showLogin();
+      return;
     }
-    showLogin();
+    if (!hasInboundAccess(session)) {
+      location.replace("board.html");
+      return;
+    }
+    showBoard();
+    syncHeader(session);
+    return loadList();
   });
 })();

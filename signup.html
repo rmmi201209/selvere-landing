@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SELVÈRE — Join</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ivory: "#FBFBF9",
+              surface: "#F3F2EE",
+              alabaster: "#EAE8E1",
+              charcoal: "#1C1C1A",
+              slateink: "#6E6D68",
+              amberglow: "#C59B63",
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', "Times New Roman", "serif"],
+              sans: ["Pretendard", "Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="min-h-screen bg-ivory font-sans text-charcoal antialiased">
+    <header class="inner-header border-b border-alabaster bg-ivory">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
+        <a href="index.html" class="font-serif text-xl tracking-[0.18em]">SELVÈRE</a>
+        <nav class="hidden items-center gap-8 text-[13px] tracking-[0.12em] uppercase md:flex">
+          <a class="hover:text-amberglow" href="index.html">Home</a>
+          <a class="hover:text-amberglow" href="board.html" data-requires-auth data-board-nav>Board</a>
+          <span data-admin-nav="hover:text-amberglow"></span>
+        </nav>
+        <div data-auth-slot></div>
+      </div>
+    </header>
+
+    <main class="page-shell mx-auto flex max-w-md items-start px-5 py-16">
+      <section class="w-full bg-surface px-6 py-10">
+        <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow">Member</p>
+        <h1 class="mt-3 font-serif text-3xl">회원가입</h1>
+        <p class="mt-3 text-sm leading-6 text-slateink">계정은 Supabase Authentication에 저장됩니다.</p>
+        <form id="signup-form" class="mt-8 space-y-4">
+          <label class="block text-xs text-slateink" for="name">이름</label>
+          <input class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm" id="name" name="name" type="text" autocomplete="name" />
+          <label class="block text-xs text-slateink" for="email">이메일</label>
+          <input class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm" id="email" name="email" type="email" autocomplete="username" />
+          <label class="block text-xs text-slateink" for="password">비밀번호</label>
+          <input class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm" id="password" name="password" type="password" autocomplete="new-password" minlength="6" />
+          <label class="block text-xs text-slateink" for="password-confirm">비밀번호 확인</label>
+          <input class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm" id="password-confirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" />
+          <p class="text-xs text-red-500" data-form-error></p>
+          <p class="text-xs text-slateink" data-form-status></p>
+          <button class="w-full bg-charcoal px-6 py-3 text-[11px] tracking-[0.18em] uppercase text-ivory" type="submit">Create Account</button>
+        </form>
+        <p class="mt-6 text-sm text-slateink">
+          이미 계정이 있다면
+          <a class="text-amberglow" href="login.html">로그인</a>
+        </p>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/signup.js"></script>
+  </body>
+</html>

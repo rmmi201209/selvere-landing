@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SELVÈRE — Board</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ivory: "#FBFBF9",
+              surface: "#F3F2EE",
+              alabaster: "#EAE8E1",
+              charcoal: "#1C1C1A",
+              slateink: "#6E6D68",
+              amberglow: "#C59B63",
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', "Times New Roman", "serif"],
+              sans: ["Pretendard", "Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="min-h-screen bg-ivory font-sans text-charcoal antialiased">
+    <header class="inner-header border-b border-alabaster bg-ivory">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
+        <a href="index.html" class="font-serif text-xl tracking-[0.18em]">SELVÈRE</a>
+        <nav class="hidden items-center gap-8 text-[13px] tracking-[0.12em] uppercase md:flex">
+          <a class="hover:text-amberglow" href="index.html">Home</a>
+          <a class="text-amberglow" href="board.html" data-requires-auth data-board-nav>Board</a>
+          <span data-admin-nav="hover:text-amberglow"></span>
+        </nav>
+        <div data-auth-slot></div>
+      </div>
+    </header>
+
+    <main class="page-shell mx-auto max-w-6xl px-5 py-12">
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow">Community</p>
+          <h1 class="mt-2 font-serif text-3xl">게시판</h1>
+          <p class="mt-2 text-sm text-slateink">로그인한 회원만 글을 읽고 작성할 수 있습니다.</p>
+          <p class="mt-2 hidden text-sm text-amberglow" data-inbound-hint>
+            인바운드 문의는 회원 게시판이 아닙니다. 오른쪽 <strong>Inbound</strong>로 들어가 주세요.
+          </p>
+        </div>
+        <a class="bg-charcoal px-5 py-3 text-center text-[11px] tracking-[0.16em] uppercase text-ivory" href="board-write.html">새 글 작성</a>
+      </div>
+      <p class="mt-6 text-sm text-slateink" data-board-status>목록을 불러오는 중...</p>
+      <p class="mt-2 text-xs text-red-500" data-board-error></p>
+      <div class="mt-6 overflow-x-auto border border-alabaster bg-ivory">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-surface text-[11px] uppercase tracking-[0.12em] text-slateink">
+            <tr>
+                <th class="px-4 py-3">제목</th>
+              <th class="px-4 py-3">작성자</th>
+              <th class="px-4 py-3">작성일</th>
+              <th class="px-4 py-3" data-admin-col></th>
+            </tr>
+          </thead>
+          <tbody id="post-rows"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/board.js"></script>
+  </body>
+</html>

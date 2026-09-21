@@ -52,8 +52,14 @@ body {
 
 .site-header.is-solid .brand-mark,
 .site-header.is-solid .nav-link,
-.site-header.is-solid .menu-toggle {
+.site-header.is-solid .menu-toggle,
+.site-header.is-solid .auth-email,
+.site-header.is-solid .header-auth-btn:not(.is-fill) {
   color: var(--charcoal);
+}
+
+.site-header.is-solid .header-auth-btn:not(.is-fill) {
+  border-color: var(--charcoal);
 }
 
 .story-grid {
@@ -105,8 +111,54 @@ body {
   display: block;
 }
 
-.inquiry-form.is-hidden {
-  display: none;
+.header-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid currentColor;
+  padding: 0.45rem 0.95rem;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.header-auth-btn.is-fill {
+  background: #fbfbf9;
+  color: #1c1c1a;
+  border-color: #fbfbf9;
+}
+
+.site-header.is-solid .header-auth-btn.is-fill,
+.inner-header .header-auth-btn.is-fill {
+  background: var(--charcoal);
+  color: var(--ivory);
+  border-color: var(--charcoal);
+}
+
+.auth-email {
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+[data-auth-slot] {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.page-shell {
+  min-height: calc(100vh - 5rem);
+}
+
+.board-row:hover {
+  background: var(--surface);
 }
 
 .admin-table-wrap table th,
