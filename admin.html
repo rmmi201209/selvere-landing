@@ -50,13 +50,20 @@
         <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow">Restricted</p>
         <h1 class="mt-3 font-serif text-3xl">관리자 로그인</h1>
         <p class="mt-3 text-sm leading-6 text-slateink">
-          Apps Script의 <code>ADMIN_TOKEN</code>과 같은 비밀번호를 입력하세요.
+          Supabase Authentication에 등록한 관리자 이메일과 비밀번호로 로그인하세요.
         </p>
         <form id="login-form" class="mt-8 space-y-4">
-          <label class="block text-xs text-slateink" for="admin-token">비밀번호</label>
+          <label class="block text-xs text-slateink" for="admin-email">이메일</label>
           <input
             class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
-            id="admin-token"
+            id="admin-email"
+            type="email"
+            autocomplete="username"
+          />
+          <label class="block text-xs text-slateink" for="admin-password">비밀번호</label>
+          <input
+            class="form-field w-full border border-alabaster bg-ivory px-4 py-3 text-sm"
+            id="admin-password"
             type="password"
             autocomplete="current-password"
           />
@@ -75,7 +82,7 @@
           <div>
             <p class="text-[11px] tracking-[0.18em] uppercase text-amberglow">Inbound</p>
             <h1 class="mt-2 font-serif text-3xl">문의 관리</h1>
-            <p class="mt-2 text-sm text-slateink">상태(H열)와 비고(J열)를 저장하면 시트에 바로 반영됩니다.</p>
+            <p class="mt-2 text-sm text-slateink">상태와 비고를 저장하면 Supabase inquiries 테이블에 바로 반영됩니다.</p>
           </div>
           <div class="flex gap-3">
             <button
@@ -117,6 +124,8 @@
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/supabase-config.js"></script>
     <script src="js/admin.js"></script>
   </body>
 </html>

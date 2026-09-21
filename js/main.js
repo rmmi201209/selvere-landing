@@ -104,8 +104,7 @@
     return /^[0-9+\-\s]{8,20}$/.test(value);
   }
 
-  var SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbwy0EqP9kzIoUarvzWBRl7mN0vkSe2F9jVXjSrFmPsP4IGwxClPUxxI5uqVKtpxRbsj/exec";
+  var db = window.SELVERE_SUPABASE.createClient();
 
   function showSuccess() {
     form.reset();
@@ -169,28 +168,21 @@
         submitButton.textContent = "Sending...";
       }
 
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(function (response) {
-          if (response.type === "opaque") {
-            return { ok: true };
-          }
-          return response.text().then(function (text) {
-            try {
-              return JSON.parse(text);
-            } catch (error) {
-              return { ok: response.ok };
-            }
-          });
+      db.from("inquiries")
+        .insert({
+          name: payload.clientName,
+          company: payload.company,
+          phone: payload.phone,
+          email: payload.email,
+          category: payload.inquiryType,
+          message: payload.message,
+          privacy_consent: payload.privacyConsent,
+          status: "접수대기",
+          note: ""
         })
         .then(function (result) {
-          if (result && result.ok === false) {
-            throw new Error(result.error || "접수에 실패했습니다.");
+          if (result.error) {
+            throw result.error;
           }
           showSuccess();
         })

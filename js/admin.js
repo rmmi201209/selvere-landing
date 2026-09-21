@@ -1,34 +1,18 @@
 (function () {
-  var SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbwy0EqP9kzIoUarvzWBRl7mN0vkSe2F9jVXjSrFmPsP4IGwxClPUxxI5uqVKtpxRbsj/exec";
-  var TOKEN_KEY = "selvere-admin-token";
+  var db = window.SELVERE_SUPABASE.createClient();
+  var STATUSES = window.SELVERE_SUPABASE.statuses;
 
   var loginPanel = document.querySelector("#login-panel");
   var boardPanel = document.querySelector("#board-panel");
   var loginForm = document.querySelector("#login-form");
-  var tokenInput = document.querySelector("#admin-token");
+  var emailInput = document.querySelector("#admin-email");
+  var passwordInput = document.querySelector("#admin-password");
   var loginError = document.querySelector("[data-login-error]");
   var boardStatus = document.querySelector("[data-board-status]");
   var boardError = document.querySelector("[data-board-error]");
   var rowsEl = document.querySelector("#inquiry-rows");
   var refreshButton = document.querySelector("#refresh-button");
   var logoutButton = document.querySelector("#logout-button");
-
-  function post(payload) {
-    return fetch(SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    }).then(function (response) {
-      return response.text().then(function (text) {
-        try {
-          return JSON.parse(text);
-        } catch (error) {
-          throw new Error("서버 응답을 읽지 못했습니다.");
-        }
-      });
-    });
-  }
 
   function showLogin() {
     loginPanel.classList.remove("hidden");
@@ -40,11 +24,25 @@
     boardPanel.classList.remove("hidden");
   }
 
-  function getToken() {
-    return sessionStorage.getItem(TOKEN_KEY) || "";
+  function formatTimestamp(value) {
+    if (!value) return "";
+    try {
+      return new Intl.DateTimeFormat("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(new Date(value));
+    } catch (error) {
+      return String(value);
+    }
   }
 
-  function renderRows(items, statuses) {
+  function renderRows(items) {
     rowsEl.innerHTML = "";
     if (!items.length) {
       boardStatus.textContent = "아직 접수된 문의가 없습니다.";
@@ -55,18 +53,16 @@
     items.forEach(function (item) {
       var tr = document.createElement("tr");
       tr.className = "border-t border-alabaster align-top";
-      tr.dataset.row = String(item.row);
+      tr.dataset.id = String(item.id);
 
-      var statusOptions = statuses
-        .map(function (status) {
-          var selected = status === item.status ? " selected" : "";
-          return "<option value=\"" + escapeAttr(status) + "\"" + selected + ">" + escapeHtml(status) + "</option>";
-        })
-        .join("");
+      var statusOptions = STATUSES.map(function (status) {
+        var selected = status === item.status ? " selected" : "";
+        return "<option value=\"" + escapeAttr(status) + "\"" + selected + ">" + escapeHtml(status) + "</option>";
+      }).join("");
 
       tr.innerHTML =
         "<td class=\"px-3 py-3 whitespace-nowrap text-xs text-slateink\">" +
-        escapeHtml(item.timestamp) +
+        escapeHtml(formatTimestamp(item.created_at)) +
         "</td>" +
         "<td class=\"px-3 py-3\"><p class=\"font-medium\">" +
         escapeHtml(item.name) +
@@ -96,15 +92,18 @@
   }
 
   function loadList() {
-    var token = getToken();
     boardError.textContent = "";
     boardStatus.textContent = "목록을 불러오는 중...";
-    return post({ action: "list", token: token }).then(function (result) {
-      if (!result.ok) {
-        throw new Error(result.error || "목록을 불러오지 못했습니다.");
-      }
-      renderRows(result.items || [], result.statuses || []);
-    });
+    return db
+      .from("inquiries")
+      .select("id, created_at, name, company, phone, email, category, message, status, note")
+      .order("created_at", { ascending: false })
+      .then(function (result) {
+        if (result.error) {
+          throw result.error;
+        }
+        renderRows(result.data || []);
+      });
   }
 
   function escapeHtml(value) {
@@ -121,25 +120,26 @@
 
   loginForm.addEventListener("submit", function (event) {
     event.preventDefault();
-    var token = tokenInput.value.trim();
+    var email = emailInput.value.trim();
+    var password = passwordInput.value;
     loginError.textContent = "";
-    if (!token) {
-      loginError.textContent = "비밀번호를 입력해 주세요.";
+
+    if (!email || !password) {
+      loginError.textContent = "이메일과 비밀번호를 입력해 주세요.";
       return;
     }
 
-    sessionStorage.setItem(TOKEN_KEY, token);
-    post({ action: "list", token: token })
+    db.auth
+      .signInWithPassword({ email: email, password: password })
       .then(function (result) {
-        if (!result.ok) {
-          throw new Error(result.error || "로그인에 실패했습니다.");
+        if (result.error) {
+          throw result.error;
         }
         showBoard();
-        renderRows(result.items || [], result.statuses || []);
+        return loadList();
       })
       .catch(function (error) {
-        sessionStorage.removeItem(TOKEN_KEY);
-        loginError.textContent = error.message;
+        loginError.textContent = error.message || "로그인에 실패했습니다.";
         showLogin();
       });
   });
@@ -151,9 +151,10 @@
   });
 
   logoutButton.addEventListener("click", function () {
-    sessionStorage.removeItem(TOKEN_KEY);
-    tokenInput.value = "";
-    showLogin();
+    db.auth.signOut().finally(function () {
+      passwordInput.value = "";
+      showLogin();
+    });
   });
 
   rowsEl.addEventListener("click", function (event) {
@@ -162,37 +163,35 @@
 
     var tr = button.closest("tr");
     var statusHint = tr.querySelector("[data-save-status]");
-    var payload = {
-      action: "update",
-      token: getToken(),
-      row: Number(tr.dataset.row),
-      status: tr.querySelector("[data-status]").value,
-      note: tr.querySelector("[data-note]").value.trim()
-    };
+    var id = tr.dataset.id;
 
     button.disabled = true;
     statusHint.textContent = "저장 중...";
-    post(payload)
+    db.from("inquiries")
+      .update({
+        status: tr.querySelector("[data-status]").value,
+        note: tr.querySelector("[data-note]").value.trim()
+      })
+      .eq("id", id)
       .then(function (result) {
-        if (!result.ok) {
-          throw new Error(result.error || "저장에 실패했습니다.");
+        if (result.error) {
+          throw result.error;
         }
         statusHint.textContent = "저장됨";
       })
       .catch(function (error) {
-        statusHint.textContent = error.message;
+        statusHint.textContent = error.message || "저장에 실패했습니다.";
       })
       .finally(function () {
         button.disabled = false;
       });
   });
 
-  if (getToken()) {
-    loadList()
-      .then(showBoard)
-      .catch(function () {
-        sessionStorage.removeItem(TOKEN_KEY);
-        showLogin();
-      });
-  }
+  db.auth.getSession().then(function (result) {
+    if (result.data && result.data.session) {
+      showBoard();
+      return loadList();
+    }
+    showLogin();
+  });
 })();
