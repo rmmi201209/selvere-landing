@@ -18,6 +18,21 @@ function clip(value, max) {
   return String(value || "").replace(/\s+$/g, "").slice(0, max);
 }
 
+function normalizeText(value, max) {
+  return clip(String(value || "").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n"), max);
+}
+
+function customerLabel(raw) {
+  var name = clip(raw, 40).trim();
+  if (!name || /@/.test(name) || /^[a-z0-9._-]{1,24}$/i.test(name)) {
+    return "고객님";
+  }
+  if (/님$/.test(name)) {
+    return name;
+  }
+  return name + "님";
+}
+
 function applyCors(req, res) {
   const origin = String(req.headers.origin || "");
   if (/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(origin)) {
@@ -121,22 +136,25 @@ function replyPrompt(payload) {
   return {
     system:
       "당신은 SELVÈRE 고객케어 담당자입니다. 커뮤니티 게시글에 달 공개 답글 초안을 한국어로 작성합니다. " +
-      "말투는 정중하고 따뜻하며 과하게 친근하지 않은 존댓말입니다. 고객이 안심할 수 있게 경청한 티가 나게 씁니다.",
+      "말투는 정중하고 따뜻하며 과하게 친근하지 않은 존댓말입니다. " +
+      "반품, 파손, 배송, 교환 요청이 있으면 공감한 뒤 확인에 필요한 다음 단계까지 안내합니다. " +
+      "항상 완결된 글만 씁니다. 문장을 중간에 끊지 않습니다.",
     user:
       "아래 게시글에 달 관리자 답글 초안을 작성해 주세요.\n\n" +
-      "- 작성자: " + clip(payload.authorName || payload.author_name, 80) + "\n" +
-      "- 제목: " + clip(payload.title, 200) + "\n" +
-      "- 본문:\n" + clip(payload.body, 4000) + "\n" +
+      "- 호칭: " + customerLabel(payload.authorName || payload.author_name) + "\n" +
+      "- 제목: " + normalizeText(payload.title, 200) + "\n" +
+      "- 본문:\n" + normalizeText(payload.body, 4000) + "\n" +
       "- 기존 답글:\n" + replyText + "\n\n" +
       "작성 규칙:\n" +
-      "1. 글을 남겨 주셔서 감사하다는 인사를 자연스럽게 넣을 것.\n" +
-      "2. 질문이나 고민을 짧게 짚고, 가능한 범위에서만 안내할 것.\n" +
-      "3. 효능, 가격, 재고, 배송일, 할인처럼 확인되지 않은 사실은 단정하지 말 것. 필요하면 별도 문의나 전문 상담으로 이어지겠다고 안내할 것.\n" +
-      "4. 공감은 하되 과잉 사과, 과장은 피할 것.\n" +
-      "5. 4~8문장, 이모지/마크다운 없이 본문만.\n" +
-      "6. 마지막 줄은 'SELVÈRE 고객케어'로 마무리할 것.\n" +
-      "7. 이미 달린 답글과 같은 말을 반복하지 말 것.\n" +
-      "8. 설명 없이 답글 초안만 출력할 것."
+      "1. 호칭은 위 값을 그대로 쓰고, 영문 아이디에 '고객님'을 겹쳐 쓰지 말 것.\n" +
+      "2. 글을 남겨 주셔서 감사하다는 인사를 넣을 것.\n" +
+      "3. 고객이 요청한 일(반품, 교환, 파손, 배송 등)을 구체적으로 다시 짚을 것.\n" +
+      "4. 불편에 공감하고, 주문번호·파손 사진·수령일처럼 확인에 필요한 자료를 정중히 요청할 것.\n" +
+      "5. 환불 확정, 즉시 재발송, 가격, 재고, 배송일, 효능처럼 확인되지 않은 사실은 단정하지 말 것. 확인 후 빠르게 안내하겠다고 할 것.\n" +
+      "6. 6~10문장의 완결된 본문. 이모지/마크다운 없이. 문장 중간에서 끝내지 말 것.\n" +
+      "7. 마지막 줄은 반드시 'SELVÈRE 고객케어'로 마무리할 것.\n" +
+      "8. 이미 달린 답글과 같은 말을 반복하지 말 것.\n" +
+      "9. 설명 없이 답글 초안만 출력할 것."
   };
 }
 
@@ -144,13 +162,47 @@ function cleanDraft(text) {
   return String(text || "")
     .replace(/^```[a-z]*\s*/i, "")
     .replace(/\s*```$/i, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 
-async function generateDraft(prompt) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    throw httpError(500, "서버에 GEMINI_API_KEY가 없습니다. .env.local 또는 Vercel 환경 변수에 키를 넣어 주세요.");
+function extractDraft(data) {
+  const candidate = (data.candidates || [])[0] || {};
+  const parts = (candidate.content || {}).parts || [];
+  const text = cleanDraft(
+    parts
+      .filter(function (part) {
+        return part && !part.thought && part.text;
+      })
+      .map(function (part) {
+        return part.text;
+      })
+      .join("\n")
+  );
+  return {
+    text: text,
+    finishReason: String(candidate.finishReason || "")
+  };
+}
+
+function isCompleteDraft(text) {
+  if (!text || text.length < 80) {
+    return false;
+  }
+  if (/[가-힣a-zA-Z0-9]$/.test(text.replace(/\s+$/g, "")) && !/고객케어\s*$/.test(text)) {
+    return false;
+  }
+  return /SELVÈRE 고객케어/.test(text);
+}
+
+async function requestGemini(apiKey, prompt, useThinkingOff) {
+  const generationConfig = {
+    temperature: 0.4,
+    maxOutputTokens: 2048
+  };
+  if (useThinkingOff) {
+    generationConfig.thinkingConfig = { thinkingBudget: 0 };
   }
 
   const response = await fetch(
@@ -164,10 +216,7 @@ async function generateDraft(prompt) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: prompt.system }] },
         contents: [{ role: "user", parts: [{ text: prompt.user }] }],
-        generationConfig: {
-          temperature: 0.4,
-          maxOutputTokens: 700
-        }
+        generationConfig: generationConfig
       })
     }
   );
@@ -178,28 +227,52 @@ async function generateDraft(prompt) {
 
   if (!response.ok) {
     const raw = data.error && data.error.message ? data.error.message : "Gemini 요청에 실패했습니다.";
-    if (/API key|UNAUTHENTICATED|401/i.test(raw)) {
-      throw httpError(500, "Gemini API 키가 유효하지 않습니다.");
-    }
-    if (/NOT_FOUND|404/i.test(raw)) {
-      throw httpError(500, "사용할 수 있는 Gemini 모델을 찾지 못했습니다.");
-    }
-    throw httpError(502, "초안을 만들지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    const error = httpError(502, raw);
+    error.geminiMessage = raw;
+    throw error;
   }
 
-  const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
-  const text = cleanDraft(
-    parts
-      .map(function (part) {
-        return part.text || "";
-      })
-      .join("\n")
-  );
+  return extractDraft(data);
+}
 
-  if (!text) {
-    throw httpError(502, "AI가 빈 초안을 반환했습니다. 다시 시도해 주세요.");
+async function generateDraft(prompt) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw httpError(500, "서버에 GEMINI_API_KEY가 없습니다. .env.local 또는 Vercel 환경 변수에 키를 넣어 주세요.");
   }
-  return text;
+
+  let lastText = "";
+  let useThinkingOff = true;
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      const result = await requestGemini(apiKey, prompt, useThinkingOff);
+      lastText = result.text;
+      if (isCompleteDraft(result.text) && result.finishReason !== "MAX_TOKENS") {
+        return result.text;
+      }
+    } catch (error) {
+      const raw = error.geminiMessage || error.message || "";
+      if (/API key|UNAUTHENTICATED|401/i.test(raw)) {
+        throw httpError(500, "Gemini API 키가 유효하지 않습니다.");
+      }
+      if (/NOT_FOUND|404/i.test(raw)) {
+        throw httpError(500, "사용할 수 있는 Gemini 모델을 찾지 못했습니다.");
+      }
+      if (useThinkingOff && /thinking|budget|unknown name/i.test(raw)) {
+        useThinkingOff = false;
+        continue;
+      }
+      if (attempt === 2) {
+        throw httpError(502, "초안을 만들지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      }
+    }
+  }
+
+  if (lastText) {
+    return lastText;
+  }
+  throw httpError(502, "AI가 빈 초안을 반환했습니다. 다시 시도해 주세요.");
 }
 
 async function runAssist(accessToken, task, payload) {
